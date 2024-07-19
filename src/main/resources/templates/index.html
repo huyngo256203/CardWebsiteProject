@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>ShopGrids</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.svg" />
+
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="assets/css/tiny-slider.css" />
+    <link rel="stylesheet" href="assets/css/glightbox.min.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <style>
+        .card {
+            border: none;
+            border-radius: 15px;
+        }
+
+        .card.shadow-sm {
+            border: 1px solid #ddd;
+            /* Add a subtle border */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Adjust the box-shadow for depth */
+        }
+
+        .card-title {
+            color: #333;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: #007bff;
+        }
+
+        .provider-list,
+        .second-provider-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .check-unit {
+            display: inline-block;
+            position: relative;
+            margin: 5px;
+        }
+
+        .btn-check {
+            display: none;
+        }
+
+        .ratio-unit {
+            display: block;
+            width: 140px;
+            height: 70px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check:checked+.ratio-unit {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+
+        .icon {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            color: #007bff;
+            background: white;
+            border-radius: 50%;
+            padding: 2px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .btn-check:checked~.icon {
+            display: block;
+        }
+
+        .second-provider-list .ratio-unit {
+            width: 140px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .second-provider-list .price {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .second-provider-list .stock {
+            font-size: 10px;
+            color: #6c757d;
+        }
+
+        #quantityInput {
+            max-width: 100px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            font-weight: 600;
+            background-color: #0167F3;
+            color: #fff !important;
+            transition: all 0.3s ease-out;
+            border-radius: 4px;
+            box-shadow: none !important;
+        }
+
+        .btn-reverse {
+            background-color: #081828 !important;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-success {
+            background-color: #198754;
+            border-color: #198754;
+        }
+
+        .btn:hover {
+            background-color: #081828;
+            box-shadow: 0 1rem 3rem rgba(35, 38, 45, 0.15) !important;
+            transform: translateY(-5px);
+        }
+
+        .ratio-unit.disabled {
+            cursor: not-allowed;
+        }
+
+        .check-unit.disabled .ratio-unit .price,
+        .check-unit.disabled .ratio-unit .stock {
+            color: #dc3545;
+        }
+
+
+        .btn-check:disabled+.ratio-unit {
+            pointer-events: none;
+        }
+
+        #quantityInput.form-control.form-control-sm {
+            margin: 0 0 0 0;
+        }
+
+        .input-group>.btn:hover {
+            transform: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Start Header Area -->
+    <header th:insert="../templates/publics/header.html"></header>
+    <!-- End Header Area -->
+
+    <!-- Start Call Action Area -->
+    <section class="featured-categories section ">
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-8 offset-lg-2 col-12">
+                    <div class="inner">
+                        <div class="content">
+                            <h2 class="wow fadeInUp" data-wow-delay=".4s">Chào mừng đến với ShopGrids
+                            </h2>
+                            <br>
+                            <p class="wow fadeInUp" data-wow-delay=".6s">Trang web bán thẻ điện thoại uy tín tại Việt
+                                Nam.</p>
+                            <hr>
+                            <div class="button wow fadeInUp" data-wow-delay=".8s">
+                                <a href="#featured-categories" class="btn">Mua hàng ngay</a>
+                                <button class="btn btn-reverse" data-bs-toggle="modal"
+                                    data-bs-target="#businessRulesModal">Quy định</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Call Action Area -->
+
+    <!-- Start Featured Categories Area -->
+    <section id="featured-categories" class="trending-product section">
+        <div class="container">
+            <div class="row">
+                <div class="container mt-4">
+                    <div id="flashMessage" style="display: none;" th:text="${message}"></div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 col-lg-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="card-title text-center mb-4">Mua thẻ điện thoại</h3>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Chọn nhà mạng:</h5>
+                                        <ul class="provider-list d-flex flex-wrap justify-content-center">
+                                            <li th:each="publisher : ${publishers}" th:if="${!publisher.isDeleted}"
+                                                class="m-2">
+                                                <label class="check-unit publisher">
+                                                    <input class="btn-check" type="radio" name="publisherId"
+                                                        th:value="${publisher.id}"
+                                                        th:checked="${publisher.id==publisherId?true:false}"
+                                                        onclick="fetchCardTypes(this.value)">
+                                                    <img class="ratio-unit" th:src="@{'/images/' + ${publisher.image}}"
+                                                        th:alt="${publisher.name}">
+                                                    <i class="uis uis-check-circle icon"></i>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div id="cardTypesContainer" class="mb-4" style="display: none;">
+                                        <h5 class="mb-3">Chọn mệnh giá:</h5>
+                                        <ul class="second-provider-list d-flex flex-wrap justify-content-center"
+                                            id="cardTypesList">
+                                        </ul>
+                                    </div>
+
+                                    <div id="quantitySection" class="mt-4" style="display: none;">
+                                        <div class="form-group mb-3">
+                                            <label for="quantityInput" class="form-label">Số lượng:</label>
+                                            <div class="input-group justify-content-center">
+                                                <button type="button" class="btn btn-primary quantity-btn"
+                                                    onclick="decreaseQuantity()">-</button>
+                                                <input type="number" class="form-control form-control-sm"
+                                                    id="quantityInput" min="1" value="1" style="text-align: center;">
+                                                <button type="button" class="btn btn-primary quantity-btn"
+                                                    onclick="increaseQuantity()">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button type="button" class="btn btn-primary" onclick="addToCart()">Thêm vào
+                                                giỏ</button>
+                                            <button type="button" class="btn btn-success" onclick="checkout()">Thanh
+                                                toán</button>
+                                            <span th:text="*{error}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Features Area -->
+
+    <!-- Business Rules Modal -->
+    <div aria-hidden="true" aria-labelledby="businessRulesModalLabel" class="modal fade" id="businessRulesModal"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="businessRulesModalLabel">Lưu ý khi mua hàng</h5>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li><b style="color:#081828">Đăng nhập để mua: </b>Bạn cần đăng nhập để mua hàng và xem lịch sử đơn hàng của mình.</li>
+                        <li><b style="color:#081828">Thanh toán nhanh: </b>Hãy hoàn tất thanh toán trong vòng 5 phút kể từ khi chọn sản phẩm.</li>
+                        <li><b style="color:#081828">Xác nhận đơn hàng: </b>Sau khi thanh toán thành công, bạn sẽ được chuyển đến trang xác nhận đơn
+                            hàng.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-alt" data-bs-dismiss="modal" type="button">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Business Rules Modal -->
+
+    <!-- Start Footer Area -->
+    <footer class="footer" th:insert="publics/footer.html"></footer>
+    <!--/ End Footer Area -->
+
+    <!-- ========================= scroll-top ========================= -->
+    <a href="#" class="scroll-top">
+        <i class="lni lni-chevron-up"></i>
+    </a>
+
+    <!-- ========================= JS here ========================= -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/tiny-slider.js"></script>
+    <script src="assets/js/glightbox.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            checkForFlashMessage();
+        });
+
+        // format price when showing
+        function formatPrice(price) {
+            if (typeof price === 'number') {
+                return (price).toLocaleString('de-DE') + "đ";
+            } else {
+                console.error("Invalid price format:", price);
+                return "N/A";
+            }
+        }
+
+        // fetch card when choosing publisher
+        // Define fixed prices
+        // const fixedPrices = [10000, 20000, 50000, 100000, 200000, 500000];
+
+        // Fetch card types when choosing publisher
+        function fetchCardTypes(publisherId) {
+            $.ajax({
+                url: '/',
+                type: 'POST',
+                data: {
+                    publisherId: publisherId
+                },
+                success: function (data) {
+                    data.sort((a, b) => a.unitPrice - b.unitPrice);
+                    var cardTypesList = $('#cardTypesList');
+                    cardTypesList.empty();
+                    data.forEach(function (cardType, index) {
+                        const formattedPrice = formatPrice(cardType.unitPrice);
+                        const isAvailable = cardType.inStock > 0;
+                        var listItem = `
+                    <li>
+                        <label class="check-unit money ${!isAvailable ? 'disabled' : ''}">
+                            <input class="btn-check" type="radio" name="cardTypeId" value="${cardType.id}" ${!isAvailable ? 'disabled' : ''}>
+                            <span class="ratio-unit ${!isAvailable ? 'disabled' : ''}">
+                                <span class="price">${formattedPrice}</span>
+                                <span class="stock">Số lượng: ${cardType.inStock}</span>
+                            </span>
+                            <i class="uis uis-check-circle icon"></i>
+                        </label>
+                    </li>`;
+                        cardTypesList.append(listItem);
+                    });
+
+                    $('#cardTypesContainer').show();
+                    $('#quantitySection').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching card types:", error);
+                    alert('Failed to fetch card types.');
+                }
+            });
+        }
+
+
+        // show quantity input when choosing card type
+        $(document).on('change', 'input[name="cardTypeId"]', function () {
+            $('#quantitySection').show();
+        });
+
+        function increaseQuantity() {
+            var quantityInput = document.getElementById('quantityInput');
+            var currentValue = parseInt(quantityInput.value, 10);
+            quantityInput.value = currentValue + 1;
+        }
+
+        // Function to decrease quantity
+        function decreaseQuantity() {
+            var quantityInput = document.getElementById('quantityInput');
+            var currentValue = parseInt(quantityInput.value, 10);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        }
+
+        // add to cart btn
+        function addToCart() {
+            var cardTypeId = $('input[name="cardTypeId"]:checked').val();
+            var quantity = $("#quantityInput").val();
+
+            if (!cardTypeId) {
+                alert("Please select a card type.");
+                return;
+            }
+
+            $.ajax({
+                url: '/cart/add',
+                type: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                data: {
+                    cardTypeId: cardTypeId,
+                    quantity: quantity
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status == 302) {
+                        var redirectUrl = xhr.getResponseHeader('Location');
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        } else {
+                            console.error("Redirect URL not found");
+                        }
+                    } else if (xhr.status == 200) {
+                        if (xhr.responseText.includes('<title>Login</title>') ||
+                            xhr.responseText.includes('login-form')) {
+                            window.location.href = '/login';
+                        } else {
+                            const response = JSON.parse(xhr.responseText);
+                            const message = response.message;
+                            displayFlashMessage(response.message);
+                            updateCartCount();
+                        }
+                    } else {
+                        console.error("Error adding to cart:", textStatus);
+                    }
+                }
+            });
+        }
+
+        function updateCartCount() {
+            $.ajax({
+                url: '/cart/itemsCount',
+                type: 'GET',
+                success: function (data) {
+                    if (data.loggedIn) {
+                        $('.total-items').text(data.cartItemCount);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching cart count:", error);
+                }
+            });
+        }
+
+        // called when page loads.
+        // If the element exists and contains text, it calls displayFlashMessage() to show the message.
+        function checkForFlashMessage() {
+            // We use setTimeout to ensure this runs after the page has loaded
+            setTimeout(function () {
+                var flashMessage = document.getElementById('flashMessage');
+                if (flashMessage && flashMessage.textContent) {
+                    displayFlashMessage(flashMessage.textContent);
+                    // Clear the flash message to prevent it from showing again on refresh
+                    flashMessage.textContent = '';
+                }
+            }, 100); // Delay time
+        }
+
+        // Display flash message
+        function displayFlashMessage(message) {
+            var flashDiv = $('<div>', {
+                class: 'alert',
+                text: message,
+                css: {
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 9999,
+                    padding: '15px',
+                    borderRadius: '5px',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }
+            });
+
+            if (message.includes("thành công") || message.includes("success")) {
+                flashDiv.addClass('alert-success');
+            } else {
+                flashDiv.addClass('alert-danger');
+            }
+            $('body').append(flashDiv);
+            setTimeout(function () {
+                flashDiv.fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+        function checkout() {
+            var cardTypeId = $('input[name="cardTypeId"]:checked').val();
+            var quantity = $("#quantityInput").val();
+
+            if (!cardTypeId) {
+                alert("Please select a card type.");
+                return;
+            }
+
+            $.ajax({
+                url: '/order/checkout',
+                type: 'POST',
+                data: {
+                    cardTypeId: cardTypeId,
+                    quantity: quantity
+                },
+                complete: function (xhr, textStatus) {
+                    if (xhr.status == 302) {
+                        var redirectUrl = xhr.getResponseHeader('Location');
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        } else {
+                            console.error("Redirect URL not found");
+                        }
+                    } else if (xhr.status == 200) {
+                        if (xhr.responseText.includes('<title>Login</title>') ||
+                            xhr.responseText.includes('login-form')) {
+                            window.location.href = '/login';
+                        } else {
+                            const response = JSON.parse(xhr.responseText);
+                            const message = response.message;
+                            displayFlashMessage(response.message);
+                        }
+                    } else {
+                        console.error("Error creating order:", textStatus);
+                    }
+                }
+            });
+        } 
+    </script>
+
+    <script type="text/javascript">
+        //========= Hero Slider
+        tns({
+            container: '.hero-slider',
+            slideBy: 'page',
+            autoplay: true,
+            autoplayButtonOutput: false,
+            mouseDrag: true,
+            gutter: 0,
+            items: 1,
+            nav: false,
+            controls: true,
+            controlsText: ['<i class="lni lni-chevron-left"></i>', '<i class="lni lni-chevron-right"></i>'],
+        });
+
+        //======== Brand Slider
+        tns({
+            container: '.brands-logo-carousel',
+            autoplay: true,
+            autoplayButtonOutput: false,
+            mouseDrag: true,
+            gutter: 15,
+            nav: false,
+            controls: false,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                540: {
+                    items: 3,
+                },
+                768: {
+                    items: 5,
+                },
+                992: {
+                    items: 6,
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

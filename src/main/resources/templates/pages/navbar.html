@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg px-3 py-2" style="height: 80px;">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
+            <!-- Offcanvas Button -->
+            <button class="btn btn-link me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+                <i class="mdi mdi-menu"></i>
+            </button>
+            <!-- Logo -->
+            <a class="navbar-brand" href="/">
+                <img src="assets/images/logo/logo.svg" alt="Logo" style="height: 40px; width: auto;">
+            </a>
+        </div>
+
+        <!-- Welcome Text -->
+        <h4 class="font-weight-bold mb-0 d-none d-lg-block text-center">
+            Welcome back, <span th:text="${session.user_sess.firstName}"></span>
+        </h4>
+
+        <!-- Buttons -->
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link me-3" type="button" onclick="window.location.href='/'">
+                <i class="mdi mdi-settings text-primary"></i> Trang chủ
+            </button>
+            <button class="btn btn-link" type="button" onclick="window.location.href='/logout'">
+                <i class="mdi mdi-logout text-primary"></i> Đăng xuất
+            </button>
+            <button class="navbar-toggler ms-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+    </div>
+</nav>

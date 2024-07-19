@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Order List</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.svg" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/LineIcons.3.0.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/tiny-slider.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/glightbox.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+
+    <!-- Custom CSS for Pagination -->
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-item {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Start Header Area -->
+<header th:insert="/publics/header.html"></header>
+<!-- End Header Area -->
+
+<!-- Start Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="breadcrumbs-content">
+                    <h1 class="page-title">Order List</h1>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <ul class="breadcrumb-nav">
+                    <li><a href="/index"><i class="lni lni-home"></i> Home</a></li>
+                    <li>Order List</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<!-- Start Order List Area -->
+<div class="order-list section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12 col-12">
+                <div class="order-list-content">
+                    <div class="title mb-4">
+                        <h3>Your Orders</h3>
+                        <p>Here is the list of your recent orders.</p>
+                    </div>
+                    <div>
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Ngày Mua</th>
+                                <th scope="col">Trạng Thái</th>
+                                <th scope="col">Tổng Tiền</th>
+                                <th scope="col">Chi Tiết</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Thay thế đoạn này bằng mã Thymeleaf -->
+                            <tr th:each="order : ${orders}">
+                                <td th:text="${order.orderDate}"></td>
+                                <td th:text="${order.status}"></td>
+                                <td th:text="${order.totalMoney}"></td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" th:href="@{/order/detail(id=${order.id})}">Chi Tiết</a>
+                                </td>
+                            </tr>
+                            <!-- Kết thúc thay thế -->
+                            </tbody>
+                        </table>
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <p th:text="${error}"></p>
+                        </div>
+                    </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <!-- Thay thế đoạn này bằng mã Thymeleaf -->
+                            <li class="page-item"><a class="page-link" th:href="@{${action}+'pageNo='+${pageNo-1}}" th:if="${pageNo>0}">Previous</a></li>
+                            <li class="page-item"><a class="page-link" th:href="@{${action}+'pageNo=0'}" th:style="${pageNo==0?'background: gainsboro;':''}">1</a></li>
+                            <li class="page-item" th:if="${pageNo-1>0}"><a class="page-link" style="display: inline-block;" th:href="@{${action}+'pageNo='+${pageNo-2}}" th:if="${pageNo-2>0}">...</a><a class="page-link" style="display: inline-block;" th:href="@{${action}+'pageNo='+${pageNo-1}}" th:text="${pageNo}"></a></li>
+                            <li class="page-item" th:if="${pageNo!=0 }"><a class="page-link" href="#" style="background: gainsboro;" th:text="${pageNo+1}"></a></li>
+                            <li class="page-item" th:if="${pageNo+2<totalPages}"><a class="page-link" style="display: inline-block;" th:href="@{${action}+'pageNo='+${pageNo+1}}" th:text="${pageNo+2}"></a><a class="page-link" style="display: inline-block;" th:href="@{${action}+'pageNo='+${pageNo+2}}" th:if="${pageNo+3<totalPages}">...</a></li>
+                            <li class="page-item" th:if="${totalPages-pageNo>1}"><a class="page-link" th:href="@{${action}+'pageNo='+${totalPages-1}}" th:style="${pageNo==totalPages-1?'background: gainsboro;':''}" th:text="${totalPages}"></a></li>
+                            <li class="page-item"><a class="page-link" th:href="@{${action}+'pageNo='+${pageNo+1}}" th:if="${pageNo<totalPages-1}">Next</a></li>
+                            <!-- Kết thúc thay thế -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Order List Area -->
+
+<!-- JS -->
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/tiny-slider.js"></script>
+<script src="assets/js/glightbox.min.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+
+</html>
